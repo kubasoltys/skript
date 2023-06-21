@@ -1,0 +1,57 @@
+import gi
+gi.require_version('Gtk', '3.0')
+from gi.repository import Gtk, GLib
+
+class MyWindow(Gtk.Window):
+    def __init__(self):
+        Gtk.Window.__init__(self, title="Vstupní hodnoty")
+        self.set_default_size(300, 200)
+
+        # Vytvoøení kontejneru pro prvky
+        box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
+        self.add(box)
+
+        # Vytvoøení textového vstupního pole pro zadání textu
+        label_text = Gtk.Label(label="Zadejte text:")
+        box.pack_start(label_text, True, True, 0)
+
+        self.entry_text = Gtk.Entry()
+        box.pack_start(self.entry_text, True, True, 0)
+
+        # Vytvoøení èíselného vstupního pole pro zadání èísla
+        label_number = Gtk.Label(label="Zadejte èíslo:")
+        box.pack_start(label_number, True, True, 0)
+
+        self.entry_number = Gtk.Entry()
+        self.entry_number.connect("activate", self.on_entry_number_activate)
+        box.pack_start(self.entry_number, True, True, 0)
+
+        # Vytvoøení tlaèítka pro potvrzení vstupù
+        button = Gtk.Button(label="Potvrdit")
+        button.connect("clicked", self.on_button_clicked)
+        box.pack_start(button, True, True, 0)
+
+    def on_button_clicked(self, button):
+        # Získání hodnot z vstupních polí
+        text = self.entry_text.get_text()
+        number = self.entry_number.get_text()
+
+        # Zobrazení hodnot v dialogovém oknì
+        dialog = Gtk.MessageDialog(self, 0, Gtk.MessageType.INFO,
+                                   Gtk.ButtonsType.OK, "Zadané hodnoty")
+        dialog.format_secondary_text(f"Text + Èíslo: {text} + {number}")
+        dialog.run()
+        dialog.destroy()
+
+    def on_entry_number_activate(self, entry):
+        # Získání hodnot z vstupních polí
+        text = self.entry_text.get_text()
+        number = self.entry_number.get_text()
+
+        # Zobrazení výstupu ve formátu "text+cislo" na standardní výstup
+        print(f"{text} + {number}")
+
+win = MyWindow()
+win.connect("destroy", Gtk.main_quit)
+win.show_all()
+Gtk.main()
